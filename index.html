@@ -184,7 +184,7 @@
             const data = calculators.get(cardId);
             data[inputType] = isNaN(value) ? null : value;
             
-            // Calculate if all inputs are present and valid (> 0 also checks for null/undefined)
+            // Calculate if all inputs are present, valid numbers, and greater than 0
             if (data.width > 0 && data.height > 0 && data.diagonal > 0) {
                 data.ppi = calculatePPI(data.width, data.height, data.diagonal);
                 data.ppi2 = data.ppi * data.ppi;
@@ -192,7 +192,11 @@
                 data.totalPixels = calculateTotalPixels(data.width, data.height);
                 updateOutputFields(cardId, data);
             } else {
-                // Reset outputs if inputs are incomplete or invalid
+                // Reset calculated values and outputs if inputs are incomplete or invalid
+                data.ppi = null;
+                data.ppi2 = null;
+                data.dotPitch = null;
+                data.totalPixels = null;
                 resetOutputFields(cardId);
             }
             
