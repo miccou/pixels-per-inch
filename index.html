@@ -76,6 +76,26 @@
             return pixels.toLocaleString();
         }
 
+        // Helper function to update output fields
+        function updateOutputFields(cardId, data) {
+            document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = 
+                data.ppi !== null ? formatNumber(data.ppi, 2) : '-';
+            document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = 
+                data.ppi2 !== null ? formatNumber(data.ppi2, 0) : '-';
+            document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = 
+                data.dotPitch !== null ? formatNumber(data.dotPitch, 3) : '-';
+            document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = 
+                data.totalPixels !== null ? formatPixels(data.totalPixels) : '-';
+        }
+
+        // Helper function to reset output fields
+        function resetOutputFields(cardId) {
+            document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = '-';
+            document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = '-';
+            document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = '-';
+            document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = '-';
+        }
+
         // Create a new calculator card
         function createCalculatorCard() {
             calculatorCount++;
@@ -173,23 +193,12 @@
                 
                 // Update outputs only if calculations succeeded
                 if (data.ppi !== null && data.dotPitch !== null) {
-                    document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi, 2);
-                    document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi2, 0);
-                    document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = formatNumber(data.dotPitch, 3);
-                    document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = formatPixels(data.totalPixels);
+                    updateOutputFields(cardId, data);
                 } else {
-                    // Reset outputs if calculations failed
-                    document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = '-';
-                    document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = '-';
-                    document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = '-';
-                    document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = '-';
+                    resetOutputFields(cardId);
                 }
             } else {
-                // Reset outputs
-                document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = '-';
-                document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = '-';
-                document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = '-';
-                document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = '-';
+                resetOutputFields(cardId);
             }
             
             updateSummaryTable();
