@@ -54,11 +54,13 @@
 
         // PPI Calculation Functions
         function calculatePPI(width, height, diagonal) {
+            if (diagonal <= 0) return null;
             const diagonalPixels = Math.sqrt(width * width + height * height);
             return diagonalPixels / diagonal;
         }
 
         function calculateDotPitch(ppi) {
+            if (ppi <= 0) return null;
             return 25.4 / ppi; // Convert to mm
         }
 
@@ -162,18 +164,26 @@
             const data = calculators.get(cardId);
             data[inputType] = isNaN(value) ? null : value;
             
-            // Calculate if all inputs are present
-            if (data.width && data.height && data.diagonal) {
+            // Calculate if all inputs are present and valid
+            if (data.width > 0 && data.height > 0 && data.diagonal > 0) {
                 data.ppi = calculatePPI(data.width, data.height, data.diagonal);
                 data.ppi2 = data.ppi * data.ppi;
                 data.dotPitch = calculateDotPitch(data.ppi);
                 data.totalPixels = calculateTotalPixels(data.width, data.height);
                 
-                // Update outputs
-                document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi, 2);
-                document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi2, 0);
-                document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = formatNumber(data.dotPitch, 3);
-                document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = formatPixels(data.totalPixels);
+                // Update outputs only if calculations succeeded
+                if (data.ppi !== null && data.dotPitch !== null) {
+                    document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi, 2);
+                    document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = formatNumber(data.ppi2, 0);
+                    document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = formatNumber(data.dotPitch, 3);
+                    document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = formatPixels(data.totalPixels);
+                } else {
+                    // Reset outputs if calculations failed
+                    document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = '-';
+                    document.querySelector(`[data-output="ppi2"][data-card-id="${cardId}"]`).textContent = '-';
+                    document.querySelector(`[data-output="dotpitch"][data-card-id="${cardId}"]`).textContent = '-';
+                    document.querySelector(`[data-output="pixels"][data-card-id="${cardId}"]`).textContent = '-';
+                }
             } else {
                 // Reset outputs
                 document.querySelector(`[data-output="ppi"][data-card-id="${cardId}"]`).textContent = '-';
