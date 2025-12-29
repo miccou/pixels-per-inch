@@ -9,6 +9,7 @@ class PPICalculatorApp {
     this.container = document.getElementById("calculators-container");
     this.summaryTable = document.querySelector("summary-table");
     this.addButton = document.getElementById("add-calculator-btn");
+    this.shareButton = document.getElementById("share-btn");
 
     this.init();
   }
@@ -16,6 +17,7 @@ class PPICalculatorApp {
   init() {
     // Event listeners
     this.addButton.addEventListener("click", () => this.addCalculator());
+    this.shareButton.addEventListener("click", () => this.shareLink());
 
     document.addEventListener("preset-selected", (e) => {
       const preset = e.detail.preset;
@@ -95,6 +97,28 @@ class PPICalculatorApp {
       window.history.replaceState({}, "", newURL);
     } else {
       window.history.replaceState({}, "", window.location.pathname);
+    }
+  }
+
+  async shareLink() {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+
+      // Show feedback
+      const originalText = this.shareButton.innerHTML;
+      this.shareButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="share-btn-text">Copied!</span>
+      `;
+
+      setTimeout(() => {
+        this.shareButton.innerHTML = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
     }
   }
 
