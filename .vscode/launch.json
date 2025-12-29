@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch PPI Calculator with Python Server",
+      "url": "http://localhost:5500",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Serve PPI Calculator"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch with Live Server (Extension Required)",
+      "url": "http://127.0.0.1:5500/index.html",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
